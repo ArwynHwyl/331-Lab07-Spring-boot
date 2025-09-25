@@ -3,14 +3,13 @@ package com.example.demo.dao;
 import com.example.demo.entity.Event;
 import com.example.demo.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-//Beans of the same type, the one marked with @Primary will be preferred.
-@Primary
+@Profile("db")
 @RequiredArgsConstructor
 public class EventDaoDbImpl implements EventDao {
 	final EventRepository eventRepository;
