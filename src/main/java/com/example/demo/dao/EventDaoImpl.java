@@ -1,0 +1,112 @@
+package com.example.demo.dao;
+
+import com.example.demo.entity.Event;
+import jakarta.annotation.PostConstruct;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Repository
+public class EventDaoImpl implements EventDao {
+    List<Event> eventList;
+
+    @PostConstruct
+    public void init() {
+        eventList = new ArrayList<>();
+        eventList.add(Event.builder()
+                .id(123L)
+                .category("animal welfare")
+                .title("Cat Adoption Day")
+                .description("Find your new feline friend at this event.")
+                .location("Meow Town")
+                .date("January 28, 2022")
+                .time("12:00")
+                .petAllowed(true)
+                .organizer("Kat Laydee")
+                .build());
+        eventList.add(Event.builder()
+                .id(456L)
+                .category("food")
+                .title("Community Gardening")
+                .description("Join us as we tend to the community edible plants.")
+                .location("Flora City")
+                .date("March 14, 2022")
+                .time("10:00")
+                .petAllowed(true)
+                .organizer("Fern Pollin")
+                .build());
+        eventList.add(Event.builder()
+                .id(789L)
+                .category("sustainability")
+                .title("Beach Cleanup")
+                .description("Help pick up trash along the shore.")
+                .location("Playa Del Carmen")
+                .date("July 22, 2022")
+                .time("11:00")
+                .petAllowed(false)
+                .organizer("Carey Wales")
+                .build());
+        eventList.add(Event.builder()
+                .id(1001L)
+                .category("animal welfare")
+                .title("Dog Adoption Day")
+                .description("Find your new canine friend at this event.")
+                .location("Woof Town")
+                .date("August 28, 2022")
+                .time("12:00")
+                .petAllowed(true)
+                .organizer("Dawg Dahd")
+                .build());
+        eventList.add(Event.builder()
+                .id(1002L)
+                .category("food")
+                .title("Canned Food Drive")
+                .description("Bring your canned food to donate to those in need.")
+                .location("Tin City")
+                .date("September 14, 2022")
+                .time("3:00")
+                .petAllowed(true)
+                .organizer("Kahn Opiner")
+                .build());
+        eventList.add(Event.builder()
+                .id(1003L)
+                .category("sustainability")
+                .title("Highway Cleanup")
+                .description("Help pick up trash along the highway.")
+                .location("Highway 50")
+                .date("July 22, 2022")
+                .time("11:00")
+                .petAllowed(false)
+                .organizer("Brody Kill")
+                .build());
+    }
+
+    @Override
+    public List<Event> getEvents(Integer perPage, Integer page) {
+        perPage = perPage == null ? eventList.size() : perPage;
+        page = page == null ? 1 : page;
+        int firstIndex = (page - 1) * perPage;
+        List<Event> output = new ArrayList<>();
+        for (int i = firstIndex; i < firstIndex + perPage; i++) {
+            if (i >= eventList.size()) {
+                break;
+            }
+            output.add(eventList.get(i));
+        }
+        return output;
+    }
+
+    @Override
+    public Event getEvent(Long id) {
+        return eventList.stream()
+                .filter(event -> event.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    public Integer getEventSize() {
+        return eventList.size();
+    }
+}
