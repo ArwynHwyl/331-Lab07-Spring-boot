@@ -112,4 +112,12 @@ public class EventDaoImpl implements EventDao {
     public Integer getEventSize() {
         return eventList.size();
     }
+
+        @Override
+        public Event save(Event event) {
+                Long nextId = eventList.isEmpty() ? 1L : eventList.get(eventList.size() - 1).getId() + 1;
+                event.setId(nextId);
+                eventList.add(event);
+                return event;
+        }
 }

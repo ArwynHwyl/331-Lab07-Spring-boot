@@ -7,4 +7,5 @@ public interface EventDao {
     Page<Event> getEvents(Integer perSize, Integer page);
     Event getEvent(Long id);
     Integer getEventSize();
+    Event save(Event event);
 }

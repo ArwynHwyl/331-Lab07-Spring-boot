@@ -25,4 +25,9 @@ public class EventServiceImpl implements EventService {
     public Integer getEventSize() {
         return eventDao.getEventSize();
     }
+
+    @Override
+    public Event save(Event event) {
+        return eventDao.save(event);
+    }
 }
