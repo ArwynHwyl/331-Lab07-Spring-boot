@@ -2,12 +2,14 @@ package com.example.demo.dao;
 
 import com.example.demo.entity.Organizer;
 import jakarta.annotation.PostConstruct;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@Profile("manual")
 public class OrganizerDaoImpl implements OrganizerDao {
     List<Organizer> organizerList;
 
@@ -72,5 +74,13 @@ public class OrganizerDaoImpl implements OrganizerDao {
     @Override
     public Integer getOrganizerSize() {
         return organizerList.size();
+    }
+
+    @Override
+    public Organizer save(Organizer organizer) {
+        Long nextId = organizerList.isEmpty() ? 1L : organizerList.get(organizerList.size() - 1).getId() + 1;
+        organizer.setId(nextId);
+        organizerList.add(organizer);
+        return organizer;
     }
 }

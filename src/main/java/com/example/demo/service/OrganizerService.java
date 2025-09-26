@@ -8,4 +8,5 @@ public interface OrganizerService {
     List<Organizer> getOrganizers(Integer perPage, Integer page);
     Organizer getOrganizer(Long id);
     Integer getOrganizerSize();
+    Organizer save(Organizer organizer);
 }

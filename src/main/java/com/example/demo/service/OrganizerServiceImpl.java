@@ -26,4 +26,9 @@ public class OrganizerServiceImpl implements OrganizerService {
     public Integer getOrganizerSize() {
         return organizerDao.getOrganizerSize();
     }
+
+    @Override
+    public Organizer save(Organizer organizer) {
+        return organizerDao.save(organizer);
+    }
 }
