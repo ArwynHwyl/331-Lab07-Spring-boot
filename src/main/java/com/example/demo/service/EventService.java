@@ -1,11 +1,10 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Event;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface EventService {
-    List<Event> getEvents(Integer perPage, Integer page);
+    Page<Event> getEvents(Integer perPage, Integer page);
     Event getEvent(Long id);
     Integer getEventSize();
 }

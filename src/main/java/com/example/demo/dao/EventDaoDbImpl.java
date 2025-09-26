@@ -4,9 +4,9 @@ import com.example.demo.entity.Event;
 import com.example.demo.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 @Profile("db")
@@ -20,14 +20,10 @@ public class EventDaoDbImpl implements EventDao {
 	}
 
 	@Override
-	public List<Event> getEvents(Integer perSize, Integer page) {
-		List<Event> events = eventRepository.findAll();
-
-		perSize = perSize == null ? events.size() : perSize;
+	public Page<Event> getEvents(Integer perSize, Integer page) {
+		perSize = perSize == null ? Integer.MAX_VALUE : perSize;
 		page = page == null ? 1 : page;
-		int firstIndex = (page - 1) * perSize;
-		List<Event> output = events.subList(firstIndex, firstIndex + perSize);
-		return output;
+		return eventRepository.findAll(PageRequest.of(Math.max(page - 1, 0), perSize));
 	}
 
 	@Override

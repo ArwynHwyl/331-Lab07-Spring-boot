@@ -3,9 +3,8 @@ package com.example.demo.service;
 import com.example.demo.dao.EventDao;
 import com.example.demo.entity.Event;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -13,7 +12,7 @@ public class EventServiceImpl implements EventService {
     EventDao eventDao;
 
     @Override
-    public List<Event> getEvents(Integer perPage, Integer page) {
+    public Page<Event> getEvents(Integer perPage, Integer page) {
         return eventDao.getEvents(perPage, page);
     }
 

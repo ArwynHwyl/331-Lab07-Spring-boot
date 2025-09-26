@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Event;
 import com.example.demo.service.EventService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/events")
@@ -24,20 +24,13 @@ public class EventController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<Event>> getEventLists(
+    public ResponseEntity<?> getEventLists(
             @RequestParam(value = "_limit", required = false) Integer perPage,
             @RequestParam(value = "_page", required = false) Integer page) {
-        List<Event> events;
-        try {
-            events = eventService.getEvents(perPage, page);
-        } catch (IndexOutOfBoundsException e) {
-            // Fallback in case DAO does not guard indices
-            events = eventService.getEvents(Integer.MAX_VALUE, 1);
-        }
-        int total = eventService.getEventSize();
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("x-total-count", String.valueOf(total));
-        return new ResponseEntity<>(events, headers, HttpStatus.OK);
+        Page<Event> pageOutput = eventService.getEvents(perPage, page);
+        HttpHeaders responseHeader = new HttpHeaders();
+        responseHeader.set("x-total-count", String.valueOf(pageOutput.getTotalElements()));
+        return new ResponseEntity<>(pageOutput.getContent(), responseHeader, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

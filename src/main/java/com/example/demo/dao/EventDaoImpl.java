@@ -3,6 +3,9 @@ package com.example.demo.dao;
 import com.example.demo.entity.Event;
 import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 //Bean that stores a list of events in memory
 //import org.springframework.context.annotation.Primary;
@@ -88,18 +91,13 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
-    public List<Event> getEvents(Integer perPage, Integer page) {
+    public Page<Event> getEvents(Integer perPage, Integer page) {
         perPage = perPage == null ? eventList.size() : perPage;
         page = page == null ? 1 : page;
-        int firstIndex = (page - 1) * perPage;
-        List<Event> output = new ArrayList<>();
-        for (int i = firstIndex; i < firstIndex + perPage; i++) {
-            if (i >= eventList.size()) {
-                break;
-            }
-            output.add(eventList.get(i));
-        }
-        return output;
+        int firstIndex = Math.max((page - 1) * perPage, 0);
+        int toIndex = Math.min(firstIndex + perPage, eventList.size());
+        List<Event> slice = firstIndex > eventList.size() ? new ArrayList<>() : eventList.subList(firstIndex, toIndex);
+        return new PageImpl<>(slice, PageRequest.of(Math.max(page - 1, 0), perPage), eventList.size());
     }
 
     @Override

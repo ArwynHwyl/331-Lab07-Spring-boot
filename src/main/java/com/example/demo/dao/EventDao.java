@@ -1,11 +1,10 @@
 package com.example.demo.dao;
 
 import com.example.demo.entity.Event;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface EventDao {
-    List<Event> getEvents(Integer perSize, Integer page);
+    Page<Event> getEvents(Integer perSize, Integer page);
     Event getEvent(Long id);
     Integer getEventSize();
 }
