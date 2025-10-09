@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -24,6 +25,11 @@ public class EventDaoDbImpl implements EventDao {
 		perSize = perSize == null ? Integer.MAX_VALUE : perSize;
 		page = page == null ? 1 : page;
 		return eventRepository.findAll(PageRequest.of(Math.max(page - 1, 0), perSize));
+	}
+
+	@Override
+	public Page<Event> getEvents(String title, Pageable page) {
+		return eventRepository.findByTitle(title,page);
 	}
 
 	@Override
