@@ -12,4 +12,5 @@ import java.util.Optional;
 public interface EventRepository extends JpaRepository<Event, Long> {
     Optional<Event> findByTitle(String title);
     Page<Event> findByTitleContaining(String title, Pageable pageRequest);
+    Page<Event> findByTitleContainingOrDescriptionContaining(String title, String description, Pageable pageRequest);
 }
