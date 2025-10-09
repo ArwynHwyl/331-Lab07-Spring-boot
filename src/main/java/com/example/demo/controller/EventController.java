@@ -32,21 +32,21 @@ public class EventController {
         Page<Event> pageOutput = eventService.getEvents(perPage, page);
         HttpHeaders responseHeader = new HttpHeaders();
         responseHeader.set("x-total-count", String.valueOf(pageOutput.getTotalElements()));
-        return new ResponseEntity<>(pageOutput.getContent(), responseHeader, HttpStatus.OK);
+        return new ResponseEntity<>(com.example.demo.util.LabMapper.INSTANCE.getEventDto(pageOutput.getContent()), responseHeader, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Event> getEvent(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getEvent(@PathVariable("id") Long id) {
         Event event = eventService.getEvent(id);
         if (event == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The given id is not found");
         }
-        return ResponseEntity.ok(event);
+        return ResponseEntity.ok(com.example.demo.util.LabMapper.INSTANCE.getEventDto(event));
     }
 
     @PostMapping
     public ResponseEntity<?> addEvent(@RequestBody Event event) {
         Event output = eventService.save(event);
-        return ResponseEntity.ok(output);
+        return ResponseEntity.ok(com.example.demo.util.LabMapper.INSTANCE.getEventDto(output));
     }
 }
