@@ -1,8 +1,10 @@
 package com.example.demo.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,6 +31,9 @@ public class Event {
     private Boolean petAllowed;
     @ManyToOne
     private Organizer organizer;
-    @ManyToMany(mappedBy = "eventHistory")
-    private List<Participant> participants;
+    @ManyToMany(mappedBy = "eventHistory", fetch = FetchType.EAGER)
+    @Builder.Default
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private List<Participant> participants = new ArrayList<>();
 }
