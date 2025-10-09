@@ -1,9 +1,13 @@
 package com.example.demo.entity;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import lombok.*;
 
 @Data
@@ -23,5 +27,8 @@ public class Event {
     private String date;
     private String time;
     private Boolean petAllowed;
-    private String organizer;
+    @ManyToOne
+    private Organizer organizer;
+    @ManyToMany(mappedBy = "eventHistory")
+    private List<Participant> participants;
 }

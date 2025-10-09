@@ -29,7 +29,6 @@ public class InitApp implements ApplicationListener<ApplicationReadyEvent> {
                     .date("3rd Sept")
                     .time("3.00-4.00 pm.")
                     .petAllowed(false)
-                    .organizer("CAMT")
                     .build());
 
             eventRepository.save(Event.builder()
@@ -40,7 +39,6 @@ public class InitApp implements ApplicationListener<ApplicationReadyEvent> {
                     .date("21th Jan")
                     .time("8.00am-4.00 pm.")
                     .petAllowed(false)
-                    .organizer("CMU")
                     .build());
 
             eventRepository.save(Event.builder()
@@ -51,7 +49,6 @@ public class InitApp implements ApplicationListener<ApplicationReadyEvent> {
                     .date("12th Nov")
                     .time("8.00-10.00 pm.")
                     .petAllowed(false)
-                    .organizer("Chiang Mai")
                     .build());
 
             eventRepository.save(Event.builder()
@@ -62,16 +59,15 @@ public class InitApp implements ApplicationListener<ApplicationReadyEvent> {
                     .date("13th April")
                     .time("10.00am - 6.00 pm.")
                     .petAllowed(true)
-                    .organizer("Chiang Mai Municipality")
                     .build());
         }
 
         // Seed Organizers (only when table is empty)
         if (organizerRepository.count() == 0) {
-            organizerRepository.save(Organizer.builder().name("Kat Laydee").address("123 Meow Town").build());
-            organizerRepository.save(Organizer.builder().name("Fern Pollin").address("456 Flora City").build());
-            organizerRepository.save(Organizer.builder().name("Carey Wales").address("789 Playa Del Carmen").build());
-            organizerRepository.save(Organizer.builder().name("Dawg Dahd").address("101 Woof Town").build());
+            organizerRepository.save(Organizer.builder().name("Kat Laydee").build());
+            organizerRepository.save(Organizer.builder().name("Fern Pollin").build());
+            organizerRepository.save(Organizer.builder().name("Carey Wales").build());
+            organizerRepository.save(Organizer.builder().name("Dawg Dahd").build());
         }
     }
 }
