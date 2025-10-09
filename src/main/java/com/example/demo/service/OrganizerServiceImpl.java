@@ -2,19 +2,28 @@ package com.example.demo.service;
 
 import com.example.demo.dao.OrganizerDao;
 import com.example.demo.entity.Organizer;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class OrganizerServiceImpl implements OrganizerService {
-    @Autowired
-    OrganizerDao organizerDao;
+    private final OrganizerDao organizerDao;
 
     @Override
-    public List<Organizer> getOrganizers(Integer perPage, Integer page) {
-        return organizerDao.getOrganizers(perPage, page);
+    public List<Organizer> getAllOrganizer() {
+        return organizerDao.getOrganizer(org.springframework.data.domain.Pageable.unpaged()).getContent();
+    }
+
+    @Override
+    public Page<Organizer> getOrganizer(Integer page, Integer pageSize) {
+        int p = page == null ? 1 : page;
+        int size = pageSize == null ? Integer.MAX_VALUE : pageSize;
+        return organizerDao.getOrganizer(PageRequest.of(Math.max(p - 1, 0), size));
     }
 
     @Override

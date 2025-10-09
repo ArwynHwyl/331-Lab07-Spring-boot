@@ -4,6 +4,8 @@ import com.example.demo.entity.Organizer;
 import com.example.demo.repository.OrganizerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,8 +17,12 @@ public class OrganizerDaoDbImpl implements OrganizerDao {
     private final OrganizerRepository organizerRepository;
 
     @Override
+    public Page<Organizer> getOrganizer(Pageable pageRequest) {
+        return organizerRepository.findAll(pageRequest);
+    }
+
+    @Override
     public List<Organizer> getOrganizers(Integer perPage, Integer page) {
-        // Simple approach: fetch all then window (could be optimized to Page later)
         List<Organizer> list = organizerRepository.findAll();
         perPage = perPage == null ? list.size() : perPage;
         page = page == null ? 1 : page;
@@ -35,6 +41,7 @@ public class OrganizerDaoDbImpl implements OrganizerDao {
         return Math.toIntExact(organizerRepository.count());
     }
 
+    @Override
     public Organizer save(Organizer organizer) {
         return organizerRepository.save(organizer);
     }

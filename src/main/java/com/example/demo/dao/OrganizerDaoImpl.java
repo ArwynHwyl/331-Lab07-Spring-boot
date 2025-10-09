@@ -3,6 +3,8 @@ package com.example.demo.dao;
 import com.example.demo.entity.Organizer;
 import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -76,5 +78,11 @@ public class OrganizerDaoImpl implements OrganizerDao {
         organizer.setId(nextId);
         organizerList.add(organizer);
         return organizer;
+    }
+
+    @Override
+    public Page<Organizer> getOrganizer(Pageable pageRequest) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getOrganizer'");
     }
 }
