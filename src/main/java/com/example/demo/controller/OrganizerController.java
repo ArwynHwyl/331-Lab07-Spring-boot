@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Organizer;
+import com.example.demo.entity.OrganizerDTO;
+import com.example.demo.util.LabMapper;
 import com.example.demo.service.OrganizerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,17 +20,16 @@ public class OrganizerController {
     private final OrganizerService organizerService;
 
     @GetMapping
-    public ResponseEntity<List<Organizer>> getOrganizers(@RequestParam(value = "_limit", required = false) Integer perPage,
+    public ResponseEntity<?> getOrganizers(@RequestParam(value = "_limit", required = false) Integer perPage,
                                                         @RequestParam(value = "_page", required = false) Integer page) {
         if (perPage == null || page == null) {
-            List<Organizer> all = organizerService.getAllOrganizer();
-            return ResponseEntity.ok(all);
+            return ResponseEntity.ok(LabMapper.INSTANCE.getOrganizerDTO(organizerService.getAllOrganizer()));
         }
 
         Page<Organizer> p = organizerService.getOrganizer(page, perPage);
         HttpHeaders headers = new HttpHeaders();
         headers.add("x-total-count", String.valueOf(p.getTotalElements()));
-        return ResponseEntity.ok().headers(headers).body(p.getContent());
+        return ResponseEntity.ok().headers(headers).body(LabMapper.INSTANCE.getOrganizerDTO(p.getContent()));
     }
 
     @GetMapping("/{id}")

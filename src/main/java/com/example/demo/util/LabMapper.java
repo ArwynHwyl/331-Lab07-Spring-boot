@@ -2,6 +2,8 @@ package com.example.demo.util;
 
 import com.example.demo.entity.Event;
 import com.example.demo.entity.EventDTO;
+import com.example.demo.entity.Organizer;
+import com.example.demo.entity.OrganizerDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -14,4 +16,8 @@ public interface LabMapper {
     EventDTO getEventDto(Event event);
 
     List<EventDTO> getEventDto(List<Event> events);
+
+    OrganizerDTO getOrganizerDTO(Organizer organizer);
+
+    List<OrganizerDTO> getOrganizerDTO(List<Organizer> organizers);
 }
