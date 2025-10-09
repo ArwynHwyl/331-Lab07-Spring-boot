@@ -33,7 +33,7 @@ public class EventController {
         perPage = perPage == null ? 3 : perPage;
         page = page == null ? 1 : page;
         Page<Event> pageOutput;
-        if (title != null) {
+        if (title == null) {
             pageOutput = eventService.getEvents(perPage,page);
         }else{
             pageOutput =
