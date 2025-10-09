@@ -45,4 +45,9 @@ public class OrganizerDaoDbImpl implements OrganizerDao {
     public Organizer save(Organizer organizer) {
         return organizerRepository.save(organizer);
     }
+
+    @Override
+    public java.util.Optional<Organizer> findById(Long id) {
+        return organizerRepository.findById(id);
+    }
 }

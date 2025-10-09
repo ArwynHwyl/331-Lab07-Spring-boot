@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrganizerDao {
     List<Organizer> getOrganizers(Integer perPage, Integer page);
@@ -13,4 +14,5 @@ public interface OrganizerDao {
     Organizer save(Organizer organizer);
 
     Page<Organizer> getOrganizer(Pageable pageRequest);
+    Optional<Organizer> findById(Long id);
 }

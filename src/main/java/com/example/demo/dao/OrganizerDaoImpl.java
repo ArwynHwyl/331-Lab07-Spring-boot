@@ -85,4 +85,9 @@ public class OrganizerDaoImpl implements OrganizerDao {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getOrganizer'");
     }
+
+    @Override
+    public java.util.Optional<Organizer> findById(Long id) {
+        return organizerList.stream().filter(o -> o.getId().equals(id)).findFirst();
+    }
 }

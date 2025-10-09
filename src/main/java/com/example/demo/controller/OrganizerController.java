@@ -33,10 +33,10 @@ public class OrganizerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Organizer> getOrganizer(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getOrganizer(@PathVariable("id") Long id) {
         Organizer organizer = organizerService.getOrganizer(id);
         if (organizer != null) {
-            return ResponseEntity.ok(organizer);
+            return ResponseEntity.ok(LabMapper.INSTANCE.getOrganizerDTO(organizer));
         } else {
             throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "The given id is not found");
         }
