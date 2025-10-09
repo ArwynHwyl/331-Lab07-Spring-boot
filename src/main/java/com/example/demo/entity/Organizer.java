@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -25,5 +26,6 @@ public class Organizer {
     private Long id;
     private String name;
     @OneToMany(mappedBy = "organizer")
-    private List<Event> ownEvents;
+    @Builder.Default
+    List<Event> ownEvents = new ArrayList<>();
 }

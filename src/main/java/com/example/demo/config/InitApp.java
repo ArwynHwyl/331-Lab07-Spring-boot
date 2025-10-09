@@ -19,55 +19,31 @@ public class InitApp implements ApplicationListener<ApplicationReadyEvent> {
 
     @Override
         public void onApplicationEvent(@org.springframework.lang.NonNull ApplicationReadyEvent applicationReadyEvent) {
-        // Seed Events (only when table is empty to avoid duplicates)
-        if (eventRepository.count() == 0) {
-            eventRepository.save(Event.builder()
-                    .category("Academic")
-                    .title("Midterm Exam")
-                    .description("A time for taking the exam")
-                    .location("CAMT Building")
-                    .date("3rd Sept")
-                    .time("3.00-4.00 pm.")
-                    .petAllowed(false)
-                    .build());
-
-            eventRepository.save(Event.builder()
-                    .category("Academic")
-                    .title("Commencement Day")
-                    .description("A time for celebration")
-                    .location("CMU Convention hall")
-                    .date("21th Jan")
-                    .time("8.00am-4.00 pm.")
-                    .petAllowed(false)
-                    .build());
-
-            eventRepository.save(Event.builder()
-                    .category("Cultural")
-                    .title("Loy Krathong")
-                    .description("A time for Krathong")
-                    .location("Ping River")
-                    .date("12th Nov")
-                    .time("8.00-10.00 pm.")
-                    .petAllowed(false)
-                    .build());
-
-            eventRepository.save(Event.builder()
-                    .category("Cultural")
-                    .title("Songkran")
-                    .description("Let's Play Water")
-                    .location("Chiang Mai Moat")
-                    .date("13th April")
-                    .time("10.00am - 6.00 pm.")
-                    .petAllowed(true)
-                    .build());
-        }
-
-        // Seed Organizers (only when table is empty)
-        if (organizerRepository.count() == 0) {
-            organizerRepository.save(Organizer.builder().name("Kat Laydee").build());
-            organizerRepository.save(Organizer.builder().name("Fern Pollin").build());
-            organizerRepository.save(Organizer.builder().name("Carey Wales").build());
-            organizerRepository.save(Organizer.builder().name("Dawg Dahd").build());
-        }
+        Organizer org1,org2,org3;
+           org1 = organizerRepository.save(Organizer.builder().name("CAMT").build());
+           org2 = organizerRepository.save(Organizer.builder().name("CMU").build());
+           org3 = organizerRepository.save(Organizer.builder().name("ChiangMai").build());
+           Event tempEvent;
+           tempEvent = eventRepository.save(Event.builder()
+                   .title("Academic")
+                   .description("Midterm Exam")
+                   .petAllowed(false)
+                   .build());
+                tempEvent.setOrganizer(org1);
+                eventRepository.save(tempEvent);
+                  tempEvent = eventRepository.save(Event.builder()
+                         .title("Sport Day")
+                         .description("Football Match")
+                         .petAllowed(true)
+                         .build());
+                tempEvent.setOrganizer(org2);
+                eventRepository.save(tempEvent);
+                  tempEvent = eventRepository.save(Event.builder()
+                         .title("Songkran")
+                         .description("Water Festival")
+                         .petAllowed(true)
+                         .build());
+                tempEvent.setOrganizer(org3);
+                eventRepository.save(tempEvent);
     }
 }
