@@ -4,6 +4,8 @@ import com.example.demo.entity.Event;
 import com.example.demo.entity.Organizer;
 import com.example.demo.repository.EventRepository;
 import com.example.demo.repository.OrganizerRepository;
+
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Transactional
 @Profile("db")
 public class InitApp implements ApplicationListener<ApplicationReadyEvent> {
         final EventRepository eventRepository;
