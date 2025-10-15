@@ -17,3 +17,12 @@ spring:
       ddl-auto: update
 server:
   port: 8082
+
+supabase:
+  storage:
+    endpoint: https://jwpszoxdvjvblshmjlhv.storage.supabase.co/storage/v1/s3
+    endpoint_output: https://jwpszoxdvjvblshmjlhv.storage.supabase.co/storage/v1
+    bucket: Lab11Bucket
+    region: ap-south-1
+    accessKey: 939045699d95917856bf8fdd8f6a3aa4
+    secretKey: b240035ffee8a1b646973d33c809bfecfe6fed5118ed13080158097c6cb25d6b
