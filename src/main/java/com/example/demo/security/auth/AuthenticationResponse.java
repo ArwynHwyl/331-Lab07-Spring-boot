@@ -1,7 +1,7 @@
 package com.example.demo.security.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.example.demo.entity.OrganizerDTO;
+import com.example.demo.entity.OrganizerAuthDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,5 +17,5 @@ public class AuthenticationResponse {
   private String accessToken;
   @JsonProperty("refresh_token")
   private String refreshToken;
-  private OrganizerDTO user;
+  private OrganizerAuthDTO user;
 }

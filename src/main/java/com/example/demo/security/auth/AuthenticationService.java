@@ -2,7 +2,7 @@ package com.example.demo.security.auth;
 
 
 
-import com.example.demo.entity.OrganizerDTO;
+import com.example.demo.entity.OrganizerAuthDTO;
 import com.example.demo.util.LabMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,8 +45,8 @@ public class AuthenticationService {
     var savedUser = repository.save(user);
     var jwtToken = jwtService.generateToken(user);
     var refreshToken = jwtService.generateRefreshToken(user);
-    OrganizerDTO organizerDTO = user.getOrganizer() != null
-            ? LabMapper.INSTANCE.getOrganizerDTO(user.getOrganizer())
+    OrganizerAuthDTO organizerDTO = user.getOrganizer() != null
+            ? LabMapper.INSTANCE.getOrganizerAuthDTO(user.getOrganizer())
             : null;
     saveUserToken(savedUser, jwtToken);
     return AuthenticationResponse.builder()
@@ -74,8 +74,8 @@ public class AuthenticationService {
 
     String jwtToken = jwtService.generateToken(user);
     String refreshToken = jwtService.generateRefreshToken(user);
-    OrganizerDTO organizerDTO = user.getOrganizer() != null
-            ? LabMapper.INSTANCE.getOrganizerDTO(user.getOrganizer())
+    OrganizerAuthDTO organizerDTO = user.getOrganizer() != null
+            ? LabMapper.INSTANCE.getOrganizerAuthDTO(user.getOrganizer())
             : null;
 //    revokeAllUserTokens(user);
     saveUserToken(user, jwtToken);
