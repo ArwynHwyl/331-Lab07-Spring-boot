@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Event;
 import com.example.demo.service.EventService;
+import com.example.demo.util.SupabaseStorageService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
@@ -21,9 +22,11 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/events")
 public class EventController {
     private final EventService eventService;
+    private final SupabaseStorageService storageService;
 
-    public EventController(EventService eventService) {
+    public EventController(EventService eventService, SupabaseStorageService storageService) {
         this.eventService = eventService;
+        this.storageService = storageService;
     }
 
     @GetMapping("")
@@ -41,7 +44,9 @@ public class EventController {
         }
         HttpHeaders responseHeader = new HttpHeaders();
         responseHeader.set("x-total-count", String.valueOf(pageOutput.getTotalElements()));
-        return new ResponseEntity<>(com.example.demo.util.LabMapper.INSTANCE.getEventDto(pageOutput.getContent()), responseHeader, HttpStatus.OK);
+    var dto = com.example.demo.util.LabMapper.INSTANCE.getEventDto(pageOutput.getContent());
+    dto.forEach(e -> e.setImages(storageService.toPublicUrls(e.getImages())));
+    return new ResponseEntity<>(dto, responseHeader, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -50,12 +55,16 @@ public class EventController {
         if (event == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The given id is not found");
         }
-        return ResponseEntity.ok(com.example.demo.util.LabMapper.INSTANCE.getEventDto(event));
+    var dto = com.example.demo.util.LabMapper.INSTANCE.getEventDto(event);
+    dto.setImages(storageService.toPublicUrls(dto.getImages()));
+    return ResponseEntity.ok(dto);
     }
 
     @PostMapping
     public ResponseEntity<?> addEvent(@RequestBody Event event) {
-        Event output = eventService.save(event);
-        return ResponseEntity.ok(com.example.demo.util.LabMapper.INSTANCE.getEventDto(output));
+    Event output = eventService.save(event);
+    var dto = com.example.demo.util.LabMapper.INSTANCE.getEventDto(output);
+    dto.setImages(storageService.toPublicUrls(dto.getImages()));
+    return ResponseEntity.ok(dto);
     }
 }

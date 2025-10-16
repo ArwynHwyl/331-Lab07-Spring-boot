@@ -20,5 +20,6 @@ public class OrganizerOwnEventsDTO {
     String date;
     String time;
     Boolean petAllowed;
+    List<String> images;
     List<Participant> participants;
 }

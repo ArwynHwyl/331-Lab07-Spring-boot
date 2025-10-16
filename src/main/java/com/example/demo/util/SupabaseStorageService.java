@@ -15,6 +15,8 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -67,5 +69,12 @@ public class SupabaseStorageService {
 
     public String buildPublicUrl(String objectName) {
         return String.format("%s/object/public/%s/%s", outputUrl, bucketName, objectName);
+    }
+
+    public List<String> toPublicUrls(List<String> keysOrUrls) {
+        if (keysOrUrls == null) return null;
+        return keysOrUrls.stream()
+                .map(v -> v == null ? null : (v.startsWith("http://") || v.startsWith("https://")) ? v : buildPublicUrl(v))
+                .collect(Collectors.toList());
     }
 }

@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.entity.Participant;
 import com.example.demo.service.ParticipantService;
 import com.example.demo.util.LabMapper;
+import com.example.demo.util.SupabaseStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,16 +22,19 @@ import java.util.List;
 @RequestMapping("/participants")
 public class ParticipantController {
     private final ParticipantService participantService;
+    private final SupabaseStorageService storageService;
 
     @GetMapping
     public ResponseEntity<?> getParticipants(
             @RequestParam(value = "_limit", required = false) Integer perPage,
             @RequestParam(value = "_page", required = false) Integer page
     ) {
-        List<Participant> participants = participantService.getParticipants(perPage, page);
+    List<Participant> participants = participantService.getParticipants(perPage, page);
         HttpHeaders headers = new HttpHeaders();
         headers.set("x-total-count", String.valueOf(participantService.getParticipantSize()));
-        return new ResponseEntity<>(LabMapper.INSTANCE.getParticipantWithEventsDTO(participants), headers, HttpStatus.OK);
+    var dto = LabMapper.INSTANCE.getParticipantWithEventsDTO(participants);
+    dto.forEach(p -> p.getEvents().forEach(ev -> ev.setImages(storageService.toPublicUrls(ev.getImages()))));
+    return new ResponseEntity<>(dto, headers, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -39,6 +43,8 @@ public class ParticipantController {
         if (participant == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Participant not found");
         }
-        return ResponseEntity.ok(LabMapper.INSTANCE.getParticipantWithEventsDTO(participant));
+    var dto = LabMapper.INSTANCE.getParticipantWithEventsDTO(participant);
+    dto.getEvents().forEach(ev -> ev.setImages(storageService.toPublicUrls(ev.getImages())));
+    return ResponseEntity.ok(dto);
     }
 }
