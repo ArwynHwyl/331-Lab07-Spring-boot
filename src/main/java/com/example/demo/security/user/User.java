@@ -4,13 +4,16 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.example.demo.security.token.Token;
+import com.example.demo.entity.Organizer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,6 +48,10 @@ public class User implements UserDetails {
 
   @OneToMany(mappedBy = "user")
   private List<Token> tokens;
+  @OneToOne(mappedBy = "user")
+  @EqualsAndHashCode.Exclude
+  @ToString.Exclude
+  private Organizer organizer;
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return roles.stream().map(role -> new SimpleGrantedAuthority(role.name())).collect(Collectors.toList());

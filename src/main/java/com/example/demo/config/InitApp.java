@@ -51,6 +51,7 @@ public class InitApp implements ApplicationListener<ApplicationReadyEvent> {
         if (userRepository.count() == 0) {
             addUsers();
         }
+        linkUsersAndOrganizers();
     }
 
     private List<Event> seedOrganizersWithEvents() {
@@ -217,6 +218,10 @@ public class InitApp implements ApplicationListener<ApplicationReadyEvent> {
     private void addUsers() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
+        Organizer org1 = organizerRepository.findByName("CAMT").orElse(null);
+        Organizer org2 = organizerRepository.findByName("CMU").orElse(null);
+        Organizer org3 = organizerRepository.findByName("Chiang Mai").orElse(null);
+
         User admin = User.builder()
                 .username("admin")
                 .password(encoder.encode("admin"))
@@ -249,8 +254,57 @@ public class InitApp implements ApplicationListener<ApplicationReadyEvent> {
         user.getRoles().add(Role.ROLE_USER);
         disabledUser.getRoles().add(Role.ROLE_USER);
 
+        if (org1 != null) {
+            org1.setUser(admin);
+            admin.setOrganizer(org1);
+        }
+        if (org2 != null) {
+            org2.setUser(user);
+            user.setOrganizer(org2);
+        }
+        if (org3 != null) {
+            org3.setUser(disabledUser);
+            disabledUser.setOrganizer(org3);
+        }
+
         userRepository.save(admin);
         userRepository.save(user);
         userRepository.save(disabledUser);
+        if (org1 != null) {
+            organizerRepository.save(org1);
+        }
+        if (org2 != null) {
+            organizerRepository.save(org2);
+        }
+        if (org3 != null) {
+            organizerRepository.save(org3);
+        }
+    }
+
+    private void linkUsersAndOrganizers() {
+        organizerRepository.findByName("CAMT").ifPresent(org -> {
+            userRepository.findByUsername("admin").ifPresent(admin -> {
+                org.setUser(admin);
+                admin.setOrganizer(org);
+                organizerRepository.save(org);
+                userRepository.save(admin);
+            });
+        });
+        organizerRepository.findByName("CMU").ifPresent(org -> {
+            userRepository.findByUsername("user").ifPresent(enabled -> {
+                org.setUser(enabled);
+                enabled.setOrganizer(org);
+                organizerRepository.save(org);
+                userRepository.save(enabled);
+            });
+        });
+        organizerRepository.findByName("Chiang Mai").ifPresent(org -> {
+            userRepository.findByUsername("disableUser").ifPresent(disabled -> {
+                org.setUser(disabled);
+                disabled.setOrganizer(org);
+                organizerRepository.save(org);
+                userRepository.save(disabled);
+            });
+        });
     }
 }
