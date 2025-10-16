@@ -1,0 +1,38 @@
+### VS Code REST Client examples for Events API
+# Requires the app running on http://localhost:8082
+
+### 1) List events (default pagination: _limit=3, _page=1)
+GET http://localhost:8082/events
+Accept: application/json
+
+### 2) List events with explicit pagination
+GET http://localhost:8082/events?_limit=5&_page=1
+Accept: application/json
+
+### 3) Search events by title/description/organizer name (with pagination)
+GET http://localhost:8082/events?title=music&_limit=5&_page=1
+Accept: application/json
+
+### 4) Get event by id
+GET http://localhost:8082/events/1
+Accept: application/json
+
+### 5) Create a new event
+# Note: organizer id must exist; images can be object keys or full URLs
+POST http://localhost:8082/events
+Content-Type: application/json
+
+{
+  "category": "Music",
+  "title": "Jazz Night",
+  "description": "Live jazz session",
+  "location": "Bangkok",
+  "date": "2025-10-20",
+  "time": "20:00",
+  "petAllowed": true,
+  "organizer": { "id": 1 },
+  "images": [
+    "events/example-1.jpg",
+    "https://picsum.photos/seed/event-1/400/300"
+  ]
+}
