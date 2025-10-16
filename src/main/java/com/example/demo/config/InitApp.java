@@ -6,6 +6,10 @@ import com.example.demo.entity.Participant;
 import com.example.demo.repository.EventRepository;
 import com.example.demo.repository.OrganizerRepository;
 import com.example.demo.repository.ParticipantRepository;
+import com.example.demo.security.user.Role;
+import com.example.demo.security.user.User;
+import com.example.demo.security.user.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
@@ -25,6 +29,7 @@ public class InitApp implements ApplicationListener<ApplicationReadyEvent> {
     private final EventRepository eventRepository;
     private final OrganizerRepository organizerRepository;
     private final ParticipantRepository participantRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -41,6 +46,10 @@ public class InitApp implements ApplicationListener<ApplicationReadyEvent> {
         if (participantRepository.count() == 0) {
             List<Event> availableEvents = seededEvents.isEmpty() ? eventRepository.findAll() : seededEvents;
             seedParticipants(availableEvents);
+        }
+
+        if (userRepository.count() == 0) {
+            addUsers();
         }
     }
 
@@ -203,5 +212,45 @@ public class InitApp implements ApplicationListener<ApplicationReadyEvent> {
         Participant savedParticipant = participantRepository.save(participant);
         eventRepository.saveAll(attendedEvents);
         return savedParticipant;
+    }
+
+    private void addUsers() {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        User admin = User.builder()
+                .username("admin")
+                .password(encoder.encode("admin"))
+                .firstname("admin")
+                .lastname("admin")
+                .email("admin@admin.com")
+                .enabled(true)
+                .build();
+
+        User user = User.builder()
+                .username("user")
+                .password(encoder.encode("user"))
+                .firstname("user")
+                .lastname("user")
+                .email("enabled@user.com")
+                .enabled(true)
+                .build();
+
+        User disabledUser = User.builder()
+                .username("disableUser")
+                .password(encoder.encode("disableUser"))
+                .firstname("disableUser")
+                .lastname("disableUser")
+                .email("disableUser@user.com")
+                .enabled(false)
+                .build();
+
+        admin.getRoles().add(Role.ROLE_USER);
+        admin.getRoles().add(Role.ROLE_ADMIN);
+        user.getRoles().add(Role.ROLE_USER);
+        disabledUser.getRoles().add(Role.ROLE_USER);
+
+        userRepository.save(admin);
+        userRepository.save(user);
+        userRepository.save(disabledUser);
     }
 }
