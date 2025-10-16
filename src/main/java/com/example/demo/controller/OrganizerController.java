@@ -26,16 +26,16 @@ public class OrganizerController {
                                                         @RequestParam(value = "_page", required = false) Integer page) {
         if (perPage == null || page == null) {
             var dto = LabMapper.INSTANCE.getOrganizerDTO(organizerService.getAllOrganizer());
-            dto.forEach(o -> o.getOwnEvents().forEach(ev -> ev.setImages(storageService.toPublicUrls(ev.getImages()))));
+            dto.forEach(this::decorateOrganizerDto);
             return ResponseEntity.ok(dto);
         }
 
         Page<Organizer> p = organizerService.getOrganizer(page, perPage);
         HttpHeaders headers = new HttpHeaders();
         headers.add("x-total-count", String.valueOf(p.getTotalElements()));
-    var dto = LabMapper.INSTANCE.getOrganizerDTO(p.getContent());
-    dto.forEach(o -> o.getOwnEvents().forEach(ev -> ev.setImages(storageService.toPublicUrls(ev.getImages()))));
-    return ResponseEntity.ok().headers(headers).body(dto);
+        var dto = LabMapper.INSTANCE.getOrganizerDTO(p.getContent());
+        dto.forEach(this::decorateOrganizerDto);
+        return ResponseEntity.ok().headers(headers).body(dto);
     }
 
     @GetMapping("/{id}")
@@ -43,7 +43,7 @@ public class OrganizerController {
         Organizer organizer = organizerService.getOrganizer(id);
         if (organizer != null) {
             var dto = LabMapper.INSTANCE.getOrganizerDTO(organizer);
-            dto.getOwnEvents().forEach(ev -> ev.setImages(storageService.toPublicUrls(ev.getImages())));
+            decorateOrganizerDto(dto);
             return ResponseEntity.ok(dto);
         } else {
             throw new ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "The given id is not found");
@@ -53,5 +53,11 @@ public class OrganizerController {
     @PostMapping
     public Organizer post(@RequestBody Organizer organizer) {
         return organizerService.save(organizer);
+    }
+
+    private void decorateOrganizerDto(OrganizerDTO organizerDTO) {
+        organizerDTO.setImage(storageService.toPublicUrl(organizerDTO.getImage()));
+        organizerDTO.getOwnEvents()
+                .forEach(ev -> ev.setImages(storageService.toPublicUrls(ev.getImages())));
     }
 }

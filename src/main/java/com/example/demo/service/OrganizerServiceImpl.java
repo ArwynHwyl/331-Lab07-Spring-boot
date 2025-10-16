@@ -16,7 +16,7 @@ public class OrganizerServiceImpl implements OrganizerService {
 
     @Override
     public List<Organizer> getAllOrganizer() {
-        return organizerDao.getOrganizer(org.springframework.data.domain.Pageable.unpaged()).getContent();
+        return organizerDao.getOrganizers(null, null);
     }
 
     @Override

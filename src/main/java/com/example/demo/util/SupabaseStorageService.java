@@ -71,10 +71,20 @@ public class SupabaseStorageService {
         return String.format("%s/object/public/%s/%s", outputUrl, bucketName, objectName);
     }
 
+    public String toPublicUrl(String keyOrUrl) {
+        if (keyOrUrl == null) {
+            return null;
+        }
+        if (keyOrUrl.startsWith("http://") || keyOrUrl.startsWith("https://")) {
+            return keyOrUrl;
+        }
+        return buildPublicUrl(keyOrUrl);
+    }
+
     public List<String> toPublicUrls(List<String> keysOrUrls) {
         if (keysOrUrls == null) return null;
         return keysOrUrls.stream()
-                .map(v -> v == null ? null : (v.startsWith("http://") || v.startsWith("https://")) ? v : buildPublicUrl(v))
+                .map(this::toPublicUrl)
                 .collect(Collectors.toList());
     }
 }

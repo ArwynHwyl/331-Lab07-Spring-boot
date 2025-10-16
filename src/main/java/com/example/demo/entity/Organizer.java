@@ -25,6 +25,7 @@ public class Organizer {
     @EqualsAndHashCode.Exclude
     private Long id;
     private String name;
+    private String image;
     @OneToMany(mappedBy = "organizer")
     @Builder.Default
     List<Event> ownEvents = new ArrayList<>();

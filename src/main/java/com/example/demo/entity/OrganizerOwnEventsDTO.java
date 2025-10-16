@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+import com.example.demo.entity.ParticipantSummaryDTO;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -21,5 +23,5 @@ public class OrganizerOwnEventsDTO {
     String time;
     Boolean petAllowed;
     List<String> images;
-    List<Participant> participants;
+    List<ParticipantSummaryDTO> participants;
 }
