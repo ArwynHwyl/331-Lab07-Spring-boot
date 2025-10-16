@@ -36,6 +36,7 @@ public class AuthenticationService {
             .firstname(request.getFirstname())
             .lastname(request.getLastname())
             .email(request.getEmail())
+            .username(request.getEmail())
             .password(passwordEncoder.encode(request.getPassword()))
             .roles(List.of(Role.ROLE_USER))
             .build();
@@ -50,14 +51,20 @@ public class AuthenticationService {
   }
 
   public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    String identifier = request.getUsername();
+    if (identifier == null || identifier.isBlank()) {
+      identifier = request.getEmail();
+    }
+    User user = repository.findByEmail(identifier).orElse(null);
+    if (user == null) {
+      user = repository.findByUsername(identifier).orElseThrow();
+    }
     authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                    request.getUsername(),
+                    user.getUsername(),
                     request.getPassword()
             )
     );
-    User user = repository.findByUsername(request.getUsername())
-            .orElseThrow();
 
     String jwtToken = jwtService.generateToken(user);
     String refreshToken = jwtService.generateRefreshToken(user);
