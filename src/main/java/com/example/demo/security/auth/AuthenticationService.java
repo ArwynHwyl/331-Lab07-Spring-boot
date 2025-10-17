@@ -40,6 +40,7 @@ public class AuthenticationService {
             .email(request.getEmail())
             .username(request.getEmail())
             .password(passwordEncoder.encode(request.getPassword()))
+            .enabled(true)
             .roles(List.of(Role.ROLE_USER))
             .build();
     var savedUser = repository.save(user);
